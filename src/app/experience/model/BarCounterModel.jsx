@@ -19,7 +19,7 @@ export default function BarCounterModel(props) {
   const [hoveredMesh, setHoveredMesh] = useState(null)
 
   // Create particle geometry
-  const particleCount = 150
+  const particleCount = 350
   const particles = useMemo(() => {
     const geometry = new THREE.BufferGeometry()
     const positions = new Float32Array(particleCount * 3)
@@ -162,43 +162,6 @@ export default function BarCounterModel(props) {
     if (index >= 2 && meshRefs.current[index].userData.hoverTl) {
       meshRefs.current[index].userData.hoverTl.reverse()
     }
-  }
-
-  // Add this inside your component, after other useEffects
-  const handleClick = (index) => {
-    if (!meshRefs.current[index]) return
-    const mesh = meshRefs.current[index]
-
-    // Create explode/spread animation
-    const spreadTl = gsap.timeline()
-    spreadTl.to(mesh.position, {
-      x: "+=" + (Math.random() * 2 - 1),
-      y: "+=" + (Math.random() * 1.5),
-      z: "+=" + (Math.random() * 2 - 1),
-      rotationX: Math.random() * Math.PI,
-      rotationY: Math.random() * Math.PI,
-      rotationZ: Math.random() * Math.PI,
-      scale: 1.5,
-      duration: 0.5,
-      ease: "power2.out",
-    })
-
-    // Return to default after minimum time (1.2s)
-    spreadTl.to(
-      mesh.position,
-      {
-        x: 0,
-        y: 0,
-        z: 0,
-        rotationX: 0,
-        rotationY: 0,
-        rotationZ: 0,
-        scale: 1,
-        duration: 1,
-        ease: "power2.inOut",
-      },
-      "+=0.7" // minimum delay before returning
-    )
   }
 
   const handleGroupClick = () => {
