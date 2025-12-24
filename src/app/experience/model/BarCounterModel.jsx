@@ -137,11 +137,11 @@ export default function BarCounterModel(props) {
       hoverTl.to(mesh.rotation, {
         z: "+=0.15",
         y: "+=0.1",
-        duration: 0.3,
+        duration: 5.3,
         ease: "power1.inOut",
       }).to(mesh.position, {
         y: "+=0.1",
-        duration: 0.15,
+        duration: 5.15,
         yoyo: true,
         repeat: 1,
         ease: "power1.inOut",
@@ -164,6 +164,89 @@ export default function BarCounterModel(props) {
     }
   }
 
+  // Add this inside your component, after other useEffects
+  const handleClick = (index) => {
+    if (!meshRefs.current[index]) return
+    const mesh = meshRefs.current[index]
+
+    // Create explode/spread animation
+    const spreadTl = gsap.timeline()
+    spreadTl.to(mesh.position, {
+      x: "+=" + (Math.random() * 2 - 1),
+      y: "+=" + (Math.random() * 1.5),
+      z: "+=" + (Math.random() * 2 - 1),
+      rotationX: Math.random() * Math.PI,
+      rotationY: Math.random() * Math.PI,
+      rotationZ: Math.random() * Math.PI,
+      scale: 1.5,
+      duration: 0.5,
+      ease: "power2.out",
+    })
+
+    // Return to default after minimum time (1.2s)
+    spreadTl.to(
+      mesh.position,
+      {
+        x: 0,
+        y: 0,
+        z: 0,
+        rotationX: 0,
+        rotationY: 0,
+        rotationZ: 0,
+        scale: 1,
+        duration: 1,
+        ease: "power2.inOut",
+      },
+      "+=0.7" // minimum delay before returning
+    )
+  }
+
+  const handleGroupClick = () => {
+    if (!meshRefs.current.length) return
+
+    const spreadTl = gsap.timeline()
+
+    // Explode/spread all meshes
+    meshRefs.current.forEach((mesh) => {
+      if (!mesh) return
+      spreadTl.to(
+        mesh.position,
+        {
+          x: "+=" + (Math.random() * 2 - 1),
+          y: "+=" + (Math.random() * 1.5),
+          z: "+=" + (Math.random() * 2 - 1),
+          rotationX: Math.random() * Math.PI,
+          rotationY: Math.random() * Math.PI,
+          rotationZ: Math.random() * Math.PI,
+          scale: 2.5,
+          duration: 2.5,
+          ease: "power2.out",
+        },
+        3 // all animations start at the same time
+      )
+    })
+
+    // Return to default after minimum delay
+    meshRefs.current.forEach((mesh) => {
+      if (!mesh) return
+      spreadTl.to(
+        mesh.position,
+        {
+          x: 0,
+          y: 0,
+          z: 0,
+          rotationX: 0,
+          rotationY: 0,
+          rotationZ: 0,
+          scale: 2,
+          duration: 3,
+          ease: "power2.inOut",
+        },
+        "+=1.7" // delay before returning
+      )
+    })
+  }
+
   return (
     <a.group ref={groupRef} {...props} dispose={null}>
       <group rotation={[-Math.PI / 2, 0, 0]}>
@@ -174,8 +257,11 @@ export default function BarCounterModel(props) {
             geometry={nodes[`Object_${objIndex}`].geometry}
             material={basicMaterials[objIndex < 4 ? "bar_counter" : "bottle"]}
             {...meshSpring(i)}
+            dispose={null}
             onPointerOver={() => handlePointerOver(i)}
             onPointerOut={() => handlePointerOut(i)}
+            // onClick={() => handleClick(i)}
+            onClick={handleGroupClick}
           />
         ))}
         {/* Particle system */}
