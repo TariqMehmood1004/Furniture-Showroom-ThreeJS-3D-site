@@ -36,7 +36,8 @@ const Plane = ({ position, planeWidth, planeDepth, yPosition }: any) => {
       .material as THREE.MeshStandardMaterial // Type-cast here
 
     const targetOpacity = hoveredRef.current ? 0.8 : 0
-    opacityRef.current = THREE.MathUtils.lerp(opacityRef.current, targetOpacity, 0.1)
+    const lerpFactor = hoveredRef.current ? 0.1 : 0.03
+    opacityRef.current = THREE.MathUtils.lerp(opacityRef.current, targetOpacity, lerpFactor)
 
     meshMaterial.opacity = opacityRef.current
     meshMaterial.emissiveIntensity = hoveredRef.current ? 1.5 : 0.8

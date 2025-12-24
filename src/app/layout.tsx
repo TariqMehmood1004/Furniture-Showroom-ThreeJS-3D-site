@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "3D Mini Home Room",
+  title: "Furniture Home",
   description: "3D Mini Home Room",
 };
 
