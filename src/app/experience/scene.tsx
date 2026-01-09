@@ -4,7 +4,8 @@ import { Suspense, useRef } from 'react'
 import { Html } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import BarCounterModel from "./model/BarCounterModel"
+import DreamHouseModel from "./model/DreamHouseModel"
+
 
 interface Props {
   camera: React.RefObject<THREE.Camera | THREE.OrthographicCamera | null>
@@ -16,7 +17,10 @@ const Scene = ({ camera, pointer }: Props) => {
   const groupRotationRef = useRef<number>(0)
 
   useFrame(() => {
-    if (!groupRef.current) return
+    if (!groupRef.current) return;
+
+    // console.log(camera.current?.position);
+    // console.log(camera.current?.rotation);
 
     const targetRotation = pointer.current.x * Math.PI * 0.25
     groupRotationRef.current = THREE.MathUtils.lerp(
@@ -31,13 +35,13 @@ const Scene = ({ camera, pointer }: Props) => {
   return (
     <Suspense
       fallback={
-        <Html className="w-screen h-screen flex justify-center items-center">
+        <Html className="flex justify-center items-center">
           <span className="text-2xl font-bold text-white">Loading...</span>
         </Html>
       }
     >
       <group ref={groupRef}>
-        <BarCounterModel />
+        <DreamHouseModel />
       </group>
     </Suspense>
   )

@@ -9,6 +9,7 @@ import * as THREE from "three"
 
 export default function BarCounterModel(props) {
   const { nodes, materials } = useGLTF("/models/BarCounterModel.glb")
+  
   const basicMaterials = useMemo(
     () => convertStandardToBasicMaterials(materials, 0.55),
     [materials]
